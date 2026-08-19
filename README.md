@@ -1,14 +1,20 @@
 # Anvil
 
+**Built on [Shotgun](https://github.com/ThatXliner/shotgun)** — a generic
+OpenAPI-to-OpenAPI translation proxy: give it two specs, it diffs them,
+auto-maps what lines up, and runs a proxy that translates requests and
+responses between the two shapes.
+
 Anvil points GitHub-shaped tooling — `gh`, Renovate, basic CI scripts, deploy
 hooks — at a self-hosted [Forgejo](https://forgejo.org) instance without
-rewriting any of it. It's a curated, hand-verified `mappings.toml` plus the
-GitHub and Forgejo OpenAPI specs it was built from, run on top of
-[Shotgun](../shotgun) — a generic OpenAPI-to-OpenAPI translation proxy.
-Shotgun doesn't know what a "repository" is; Anvil is the opinionated
-GitHub↔Forgejo configuration of it, tested against a real, public Forgejo
-instance (Codeberg). Anvil doesn't vendor or fork Shotgun — it's a sibling
-project that runs on top of a real Shotgun checkout.
+rewriting any of it. Shotgun doesn't know what a "repository" is; Anvil is
+the opinionated GitHub↔Forgejo configuration of it: a curated,
+hand-verified `mappings.toml` plus the OpenAPI specs it was built from,
+tested against a real, public Forgejo instance (Codeberg). Anvil doesn't
+vendor or fork Shotgun — it's a sibling project that runs on a real Shotgun
+checkout, and every gap it hit in Shotgun's mapping format (see "Known
+Shotgun bugs fixed along the way" below) was fixed upstream in Shotgun
+itself, not worked around here.
 
 ## Quickstart
 
