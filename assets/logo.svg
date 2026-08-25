@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Anvil">
+  <defs>
+    <!-- hot face: white-hot core cooling to deep ember at the edges -->
+    <linearGradient id="hotface" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE9B0"/>
+      <stop offset="0.45" stop-color="#FFA211"/>
+      <stop offset="1" stop-color="#B84F01"/>
+    </linearGradient>
+    <linearGradient id="hotglow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF9A3C" stop-opacity="0"/>
+      <stop offset="0.6" stop-color="#FF9A3C" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FF9A3C" stop-opacity="0"/>
+    </linearGradient>
+    <!-- steel body, lit from above by the forge -->
+    <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6C7793"/>
+      <stop offset="0.5" stop-color="#53607E"/>
+      <stop offset="1" stop-color="#39445E"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#08131E"/>
+      <stop offset="0.72" stop-color="#020D19"/>
+      <stop offset="1" stop-color="#1A191F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- forge glow rising behind the anvil -->
+  <ellipse cx="256" cy="190" rx="190" ry="110" fill="url(#hotglow)" opacity="0.5"/>
+
+  <!-- sparks -->
+  <g fill="#FFC24D">
+    <circle cx="176" cy="118" r="4"/>
+    <circle cx="238" cy="88"  r="3"/>
+    <circle cx="308" cy="104" r="5"/>
+    <circle cx="352" cy="140" r="3"/>
+    <circle cx="204" cy="152" r="2.5"/>
+  </g>
+
+  <!-- the anvil -->
+  <g id="anvil-root" stroke="#000F30" stroke-width="10" stroke-linejoin="round">
+    <!-- horn + face -->
+    <path d="M96 208
+             C 96 196, 108 188, 124 188
+             L 400 188
+             C 420 188, 432 198, 432 210
+             L 432 240
+             C 432 252, 422 260, 408 260
+             L 300 260
+             L 288 300
+             L 224 300
+             L 212 260
+             L 148 260
+             C 122 260, 100 244, 92 222
+             Z"
+          fill="url(#steel)"/>
+    <!-- hot top face strip -->
+    <path d="M112 192
+             L 400 192
+             C 416 192, 426 199, 427 209
+             L 96 209
+             C 99 199, 103 192, 112 192
+             Z"
+          fill="url(#hotface)" stroke-width="7"/>
+    <!-- waist -->
+    <path d="M224 300 L 288 300 L 302 356 L 210 356 Z" fill="#39445E"/>
+    <!-- base -->
+    <path d="M168 356 L 344 356 C 360 356, 370 364, 372 376 L 376 396 L 136 396 L 140 376 C 142 364, 152 356, 168 356 Z"
+          fill="#53607E"/>
+  </g>
+
+  <!-- hardy hole (the square punch on the face) -->
+  <rect x="330" y="216" width="26" height="26" rx="4" transform="rotate(45 343 229)" fill="#101826" opacity="0.85"/>
+
+  <!-- ground shadow -->
+  <ellipse cx="256" cy="410" rx="180" ry="18" fill="#05070B" opacity="0.8"/>
+</svg>

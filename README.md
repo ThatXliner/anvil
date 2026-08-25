@@ -1,14 +1,25 @@
-# Anvil
+<p align="center">
+  <img src="assets/banner.png" alt="Anvil — GitHub-shaped tools, hammering on your own forge" width="100%">
+</p>
 
-A proxy that lets GitHub-compatible tools (`gh`, Renovate, CI scripts) talk to a [Forgejo](https://forgejo.org) instance — no rewrites needed.
+<h1 align="center">Anvil</h1>
 
-Built on [Shotgun](https://github.com/ThatXliner/shotgun), an OpenAPI-to-OpenAPI translation proxy. Anvil is the opinionated GitHub↔Forgejo configuration: a curated `mappings.toml` tested against [Codeberg](https://codeberg.org).
+<p align="center">
+  <strong>Point GitHub-shaped tools at your Forgejo instance. No rewrites.</strong><br>
+  <code>gh</code> · Renovate · CI scripts → your own forge, translated at the anvil.
+</p>
+
+---
+
+Anvil is a proxy that lets GitHub-compatible tools talk to a [Forgejo](https://forgejo.org) instance as if it were GitHub. `gh repo list` works. Renovate works. CI status reporting works. The tools never learn the difference.
+
+Under the hood it's [Shotgun](https://github.com/ThatXliner/shotgun) — an OpenAPI-to-OpenAPI translation proxy — wearing a curated GitHub↔Forgejo configuration: a hand-checked `mappings.toml`, tested live against [Codeberg](https://codeberg.org). The value is the mapping file, the one-command experience, and the testing.
 
 ## Quickstart
 
 ```sh
-git clone <shotgun-repo-url> shotgun
-git clone <this-repo> anvil && cd anvil
+git clone https://github.com/ThatXliner/shotgun shotgun
+git clone https://github.com/ThatXliner/anvil anvil && cd anvil
 ./anvil.sh --forgejo-url https://your-forgejo.example.com
 ```
 
@@ -25,11 +36,11 @@ GH_HOST=127.0.0.1:3000 GH_TOKEN=<forgejo-token> gh api user
 
 ## Coverage
 
-82% of endpoints (72/87) are mapped. Verified live against Codeberg via `scripts/test-p1.sh`.
+**82% of endpoints (72/87) are mapped**, verified live against Codeberg via `scripts/test-p1.sh`.
 
-**Working:** users, repos, branches, issues, PRs (including merge), commit statuses, contents, labels, milestones, releases, webhooks, collaborators, git refs (read), pagination, Actions (runs/artifacts/secrets), search (keyword only).
+**Working:** users, repos, branches, issues, PRs (including merge — GitHub's `PUT` becomes Forgejo's `POST`), commit statuses, contents, labels, milestones, releases, webhooks, collaborators, git refs (read), pagination (`per_page` → `limit`, `Link` headers rewritten), Actions (runs/artifacts/secrets), search (keyword only).
 
-**Not supported:** `GET /repos/{owner}/{repo}/readme` (no Forgejo equivalent), `PATCH /user`, git ref create/update, Dependabot, Codespaces, GitHub Apps, GraphQL, Packages, code scanning. These return 501.
+**Not supported:** `GET /repos/{owner}/{repo}/readme` (no Forgejo equivalent), `PATCH /user`, git ref create/update, Dependabot, Codespaces, GitHub Apps, GraphQL, Packages, code scanning. These return **501** — the same answer GitHub would give, so your tooling fails fast and loudly instead of silently misbehaving.
 
 ## Extending
 
@@ -47,10 +58,18 @@ GH_HOST=127.0.0.1:3000 GH_TOKEN=<forgejo-token> gh api user
 ## Project structure
 
 ```
-mappings.toml          — the mapping configuration (start here)
-anvil.sh               — entrypoint script
-specs/                 — trimmed and full OpenAPI specs, plus trim/edit scripts
-scripts/test-p1.sh     — live endpoint tests
+mappings.toml            — the mapping configuration (start here)
+anvil.sh                 — entrypoint script
+specs/                   — trimmed and full OpenAPI specs, plus trim/edit scripts
+scripts/test-p1.sh       — live endpoint tests
 scripts/dev-tls-proxy.py — local HTTPS proxy for gh testing
-Dockerfile             — containerized alternative (build from parent dir containing both anvil/ and shotgun/)
+Dockerfile               — containerized alternative (build from parent dir containing both anvil/ and shotgun/)
 ```
+
+---
+
+<p align="center">
+  <a href="https://thatxliner.github.io/anvil/">Landing page</a> ·
+  Built on <a href="https://github.com/ThatXliner/shotgun">Shotgun</a> ·
+  Sibling project — same night sky, warmer fire.
+</p>

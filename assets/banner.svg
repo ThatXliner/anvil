@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320" role="img" aria-label="Anvil — GitHub-shaped tools, hammering on your own forge">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#08131E"/>
+      <stop offset="0.7" stop-color="#020D19"/>
+      <stop offset="1" stop-color="#1A191F"/>
+    </linearGradient>
+    <!-- the choked-off ember band at the horizon, kin to Shotgun's sky -->
+    <linearGradient id="ember" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#392424"/>
+      <stop offset="0.55" stop-color="#A2340D"/>
+      <stop offset="1" stop-color="#392424" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="forgeglow" cx="0.5" cy="1" r="1">
+      <stop offset="0" stop-color="#FF9A3C" stop-opacity="0.5"/>
+      <stop offset="0.6" stop-color="#A2340D" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#A2340D" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hotface" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE9B0"/>
+      <stop offset="0.5" stop-color="#FFA211"/>
+      <stop offset="1" stop-color="#B84F01"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6C7793"/>
+      <stop offset="1" stop-color="#39445E"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#101B29"/>
+    </pattern>
+    <linearGradient id="wordmark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBF2D7"/>
+      <stop offset="1" stop-color="#EED2AA"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="320" fill="url(#bg)"/>
+
+  <!-- ember horizon behind everything -->
+  <rect y="196" width="1280" height="70" fill="url(#ember)" opacity="0.85"/>
+  <ellipse cx="880" cy="320" rx="560" ry="220" fill="url(#forgeglow)"/>
+  <rect width="1280" height="320" fill="url(#dots)" opacity="0.4"/>
+
+  <!-- sparks drifting up from the anvil -->
+  <g fill="#FFC24D">
+    <circle cx="150" cy="150" r="3"/>
+    <circle cx="188" cy="96"  r="2.4"/>
+    <circle cx="230" cy="128" r="3.6"/>
+    <circle cx="266" cy="70"  r="2"/>
+    <circle cx="118" cy="104" r="2.6"/>
+    <circle cx="205" cy="176" r="2"/>
+  </g>
+
+  <!-- the anvil, standing on its stump -->
+  <g transform="translate(60,58) scale(0.86)">
+    <!-- stump: eye-level slab, flat cut face -->
+    <path d="M80 204 L 284 204 L 284 244 L 276 252 C 274 258, 264 262, 252 262 L 112 262 C 100 262, 90 258, 88 252 L 80 244 Z"
+          fill="#4A2C17" stroke="#000F30" stroke-width="8" stroke-linejoin="round"/>
+    <rect x="88" y="208" width="188" height="10" fill="#6B4423"/>
+    <!-- anvil body -->
+    <g stroke="#000F30" stroke-width="9" stroke-linejoin="round">
+      <path d="M22 66
+               C 22 56, 32 48, 46 48
+               L 250 48
+               C 266 48, 276 56, 276 66
+               L 276 92
+               C 276 102, 268 108, 256 108
+               L 178 108
+               L 170 138
+               L 122 138
+               L 114 108
+               L 66 108
+               C 46 108, 30 96, 24 78
+               Z"
+            fill="url(#steel)"/>
+      <path d="M34 52 L 250 52 C 262 52, 270 57, 271 65 L 26 65 C 28 57, 28 52, 34 52 Z"
+            fill="url(#hotface)" stroke-width="6"/>
+      <path d="M122 138 L 170 138 L 180 172 L 112 172 Z" fill="#39445E"/>
+      <path d="M84 172 L 208 172 C 220 172, 228 179, 230 189 L 232 204 L 62 204 L 64 189 C 66 179, 72 172, 84 172 Z"
+            fill="#53607E"/>
+    </g>
+    <rect x="196" y="72" width="16" height="16" rx="3" transform="rotate(45 204 80)" fill="#101826" opacity="0.85"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="420" y="158" font-family="'Alfa Slab One', ui-monospace, serif" font-weight="700" font-size="92" letter-spacing="6" fill="url(#wordmark)">ANVIL</text>
+
+  <!-- tagline -->
+  <text x="424" y="204" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="26" fill="#D8C49E">GitHub-shaped tools, hammering on your own forge.</text>
+
+  <!-- caption -->
+  <text x="424" y="240" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" fill="#7A6A50">gh · renovate · CI → forgejo, translated at the anvil</text>
+</svg>
