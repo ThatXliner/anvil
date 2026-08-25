@@ -661,7 +661,7 @@ h2 {
 }
 .gauge-fill {
   height: 26px;
-  width: 82%;
+  width: 86%;
   border-radius: 999px;
   background: linear-gradient(to right, var(--hot-deep), var(--hot-shadow) 40%, var(--hot-main));
   box-shadow: 0 0 22px rgba(255, 162, 17, 0.35);
@@ -965,7 +965,7 @@ h2 {
       <div class="halftone"></div>
       <p class="kicker">What rings true</p>
       <h2>The tools can't tell the difference.</h2>
-      <p class="lede">82% of the GitHub endpoints these tools actually hit are mapped — field renames, param renames, path reshuffles, even method changes — all verified against a real Forgejo instance.</p>
+      <p class="lede">86% of the GitHub endpoints these tools actually hit are mapped — field renames, param renames, path reshuffles, even method changes — all verified against a real Forgejo instance.</p>
     </div>
 
     <div class="answer-grid">
@@ -975,7 +975,7 @@ h2 {
       <div class="answer reveal"><span class="mark">⤢</span><h3>Pagination</h3><p><code>per_page</code> becomes <code>limit</code>, and <code>Link</code> headers are rewritten so clients keep following pages unaware.</p></div>
       <div class="answer reveal"><span class="mark">⟳</span><h3>Actions &amp; artifacts</h3><p>Workflow runs, artifacts, secrets, variables — the automation surface, translated.</p></div>
       <div class="answer reveal"><span class="mark">⌕</span><h3>Search</h3><p><code>GET /search/repositories</code> is re-routed to Forgejo's <code>/repos/search</code> — the path reshuffles, the client doesn't notice.</p></div>
-      <div class="answer reveal"><span class="mark">⎘</span><h3>Contents &amp; releases</h3><p>Read and write files, cut releases, manage labels, milestones, webhooks, and collaborators.</p></div>
+      <div class="answer reveal"><span class="mark">⎘</span><h3>Contents, readme &amp; releases</h3><p>Read and write files — including <code>GET …/readme</code>, which Forgejo doesn't have and Anvil synthesizes from the contents API — plus releases, labels, milestones, webhooks, and collaborators.</p></div>
       <div class="answer reveal"><span class="mark">☰</span><h3>Users &amp; orgs</h3><p>The identity surface <code>gh</code> checks on startup — <code>/user</code>, user repos, org membership — answers in GitHub's dialect.</p></div>
     </div>
   </div>
@@ -992,10 +992,9 @@ h2 {
     </div>
 
     <ul class="refusal-list reveal">
-      <li><span class="code">501</span>GET /repos/{owner}/{repo}/readme</li>
-      <li><span class="code">501</span>PATCH /user</li>
       <li><span class="code">501</span>git ref create &amp; update</li>
       <li><span class="code">501</span>Dependabot secrets</li>
+      <li><span class="code">501</span>Actions variable creation</li>
       <li><span class="code">501</span>Codespaces</li>
       <li><span class="code">501</span>GitHub Apps</li>
       <li><span class="code">501</span>GraphQL</li>
@@ -1041,16 +1040,16 @@ h2 {
     <div class="section-head reveal">
       <div class="halftone"></div>
       <p class="kicker">The heat gauge</p>
-      <h2>82% forged, against a real forge.</h2>
-      <p class="lede">72 of 87 endpoints mapped and verified live against Codeberg — not against fixtures. The rest either have no Forgejo equivalent or are on the anvil.</p>
+      <h2>86% forged, against a real forge.</h2>
+      <p class="lede">75 of 87 endpoints mapped and verified live against Codeberg — not against fixtures. The rest have no Forgejo equivalent, and Anvil says so rather than guessing.</p>
     </div>
 
     <div class="gauge reveal">
       <div class="gauge-fill"></div>
     </div>
     <div class="gauge-labels reveal">
-      <span class="hot">72 endpoints forged</span>
-      <span>of 87 — tested via scripts/test-p1.sh</span>
+      <span class="hot">75 endpoints forged</span>
+      <span>of 87 — every one exercised against Codeberg</span>
     </div>
   </div>
 </section>
@@ -1157,8 +1156,12 @@ docker run -p 3000:3000 \
       note: 'path → filepath — a param rename, absorbed mid-flight',
       hl: ['filepath'] },
     { say: 'GET  /repos/eagle/doghouse/readme',
+      wire: 'GET  /api/v1/repos/eagle/doghouse/contents/README.md',
+      note: 'Forgejo has no readme endpoint — Anvil routes it through the contents API, same GitHub-shaped answer',
+      hl: ['contents/README.md'] },
+    { say: 'GET  /repos/eagle/doghouse/actions/secrets/TOKEN',
       wire: '501  Not Implemented',
-      note: 'no Forgejo equivalent — refused in GitHub\'s own voice',
+      note: 'Forgejo never reads secrets back — refused in GitHub\'s own voice',
       refusal: true },
     { say: 'GET  /user',
       wire: 'GET  /api/v1/user',

@@ -83,7 +83,7 @@ note = "no matching path or operationId found in target spec"
 [[endpoints]]
 source = "DELETE /repos/{owner}/{repo}/git/refs/{ref}"
 target = ""
-note = "path matches '/repos/{owner}/{repo}/git/refs/{ref}' in target, but method differs (source DELETE vs target GET) -- confirm and map manually"
+note = "Forgejo's API only reads refs (GET); ref writes happen through the branch and tag endpoints, whose bodies don't line up with GitHub's"
 
 [[endpoints]]
 source = "DELETE /repos/{owner}/{repo}/hooks/{hook_id}"
@@ -543,7 +543,7 @@ total_count = 0
 [[endpoints]]
 source = "GET /repos/{owner}/{repo}/actions/secrets/{secret_name}"
 target = ""
-note = "path matches '/repos/{owner}/{repo}/actions/secrets/{secretname}' in target, but method differs (source GET vs target DELETE) -- confirm and map manually"
+note = "Forgejo has no single-secret lookup -- secrets can be listed and written (PUT), never read back individually"
 
 [[endpoints]]
 source = "GET /repos/{owner}/{repo}/actions/variables"
@@ -608,9 +608,18 @@ path = "commit"
 schema_map = "commit"
 
 [[endpoints]]
-source = "GET /repos/{owner}/{repo}/codespaces"
-target = ""
-note = "no matching path or operationId found in target spec"
+source = "GET /repos/{owner}/{repo}/readme"
+target = "GET /repos/{owner}/{repo}/contents/README.md"
+edited = true
+note = "Forgejo has no readme endpoint -- routed through the contents API with a literal README.md segment. Only finds a readme literally named README.md (GitHub also matches readme.rst, README.txt, ...). Response is ContentsResponse, which already uses GitHub's content-file field names."
+
+[endpoints.response]
+drops = [
+    "last_commit_sha",
+    "last_commit_when",
+    "submodule_git_url",
+    "target",
+]
 
 [[endpoints]]
 source = "GET /repos/{owner}/{repo}/collaborators"
@@ -1164,8 +1173,17 @@ pull_number = "index"
 
 [[endpoints]]
 source = "GET /repos/{owner}/{repo}/readme"
-target = ""
-note = "no matching path or operationId found in target spec"
+target = "GET /repos/{owner}/{repo}/contents/README.md"
+edited = true
+note = "Forgejo has no readme endpoint; served via the contents API with a literal README.md segment (Forgejo copies non-param path segments verbatim). Only finds the default readme when it is literally named README.md -- README.rst / lowercase readme.md etc. are not found."
+
+[endpoints.response]
+drops = [
+    "last_commit_sha",
+    "last_commit_when",
+    "submodule_git_url",
+    "target",
+]
 
 [[endpoints]]
 source = "GET /repos/{owner}/{repo}/releases"
@@ -1816,7 +1834,7 @@ homepage = "website"
 [[endpoints]]
 source = "PATCH /repos/{owner}/{repo}/git/refs/{ref}"
 target = ""
-note = "path matches '/repos/{owner}/{repo}/git/refs/{ref}' in target, but method differs (source PATCH vs target GET) -- confirm and map manually"
+note = "Forgejo's API only reads refs (GET); ref writes happen through the branch and tag endpoints, whose bodies don't line up with GitHub's"
 
 [[endpoints]]
 source = "PATCH /repos/{owner}/{repo}/hooks/{hook_id}"
@@ -2081,8 +2099,39 @@ schema_map = "simple-user"
 
 [[endpoints]]
 source = "PATCH /user"
-target = ""
-note = "path matches '/user' in target, but method differs (source PATCH vs target GET) -- confirm and map manually"
+target = "PATCH /user/settings"
+edited = true
+note = "Forgejo exposes profile edits at /user/settings (UserSettingsOptions). Mappable subset: name->full_name, blog->website, bio->description; location shares its name. GitHub-only fields (email, company, twitter_username, hireable) are dropped -- Forgejo manages email privately and has no company/twitter profile fields."
+
+[endpoints.request]
+drops = [
+    "company",
+    "email",
+    "hireable",
+    "twitter_username",
+]
+
+[endpoints.request.renames]
+name = "full_name"
+blog = "website"
+bio = "description"
+
+[endpoints.response]
+drops = [
+    "diff_view_style",
+    "enable_repo_unit_hints",
+    "hide_activity",
+    "hide_email",
+    "hide_pronouns",
+    "language",
+    "pronouns",
+    "theme",
+]
+
+[endpoints.response.renames]
+name = "full_name"
+blog = "website"
+bio = "description"
 
 [[endpoints]]
 source = "POST /orgs/{org}/repos"
@@ -2262,7 +2311,7 @@ homepage = "website"
 [[endpoints]]
 source = "POST /repos/{owner}/{repo}/actions/variables"
 target = ""
-note = "path matches '/repos/{owner}/{repo}/actions/variables' in target, but method differs (source POST vs target GET) -- confirm and map manually"
+note = "Forgejo puts the variable name in the path (POST .../variables/{variablename}) -- Shotgun can't move a body field into the path, so creation can't be expressed"
 
 [[endpoints]]
 source = "POST /repos/{owner}/{repo}/codespaces"

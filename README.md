@@ -36,11 +36,11 @@ GH_HOST=127.0.0.1:3000 GH_TOKEN=<forgejo-token> gh api user
 
 ## Coverage
 
-**82% of endpoints (72/87) are mapped**, verified live against Codeberg via `scripts/test-p1.sh`.
+**86% of endpoints (75/87) are mapped**, verified live against Codeberg.
 
-**Working:** users, repos, branches, issues, PRs (including merge — GitHub's `PUT` becomes Forgejo's `POST`), commit statuses, contents, labels, milestones, releases, webhooks, collaborators, git refs (read), pagination (`per_page` → `limit`, `Link` headers rewritten), Actions (runs/artifacts/secrets), search (keyword only).
+**Working:** users (including profile edits via `PATCH /user`), repos, branches, issues, PRs (including merge — GitHub's `PUT` becomes Forgejo's `POST`), commit statuses, contents, **the repo readme** (Forgejo has no readme endpoint — Anvil serves it from the contents API; it matches a readme literally named `README.md`), labels, milestones, releases, webhooks, collaborators, git refs (read), pagination (`per_page` → `limit`, `Link` headers rewritten), Actions (runs/artifacts/secrets), search (keyword only).
 
-**Not supported:** `GET /repos/{owner}/{repo}/readme` (no Forgejo equivalent), `PATCH /user`, git ref create/update, Dependabot, Codespaces, GitHub Apps, GraphQL, Packages, code scanning. These return **501** — the same answer GitHub would give, so your tooling fails fast and loudly instead of silently misbehaving.
+**Not supported:** git ref create/update (Forgejo's API only reads refs), Actions variable creation (Forgejo puts the name in the path), reading a single secret back, Dependabot, Codespaces, GitHub Apps, GraphQL, Packages, code scanning. These return **501** — the same answer GitHub would give, so your tooling fails fast and loudly instead of silently misbehaving.
 
 ## Extending
 
@@ -53,7 +53,7 @@ GH_HOST=127.0.0.1:3000 GH_TOKEN=<forgejo-token> gh api user
    python3 specs/edit_mappings.py
    ```
 3. Check `shotgun validate --mappings mappings.toml` for unresolved fields — add renames in `mappings.toml` or `specs/edit_mappings.py`.
-4. Test against a real instance with `curl` or add a case to `scripts/test-p1.sh`.
+4. Test against a real instance with `curl`, or add a case to the live endpoint test suite (`scripts/test-p1.sh`).
 
 ## Project structure
 

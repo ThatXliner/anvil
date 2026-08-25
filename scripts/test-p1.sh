@@ -108,8 +108,26 @@ else
   FAIL=$((FAIL+1))
 fi
 
+echo "== Readme via contents API =="
+# Forgejo has no readme endpoint; Anvil routes it to contents/README.md.
+# Assert the GitHub-shaped fields a client would actually read.
+readme_code="$(curl -s -o /tmp/anvil-readme-test.json -w '%{http_code}' "$ANVIL_URL/repos/$TEST_OWNER/$TEST_REPO/readme")"
+if [ "$readme_code" = "200" ] \
+  && python3 -c "
+import json
+d = json.load(open('/tmp/anvil-readme-test.json'))
+assert d.get('name', '').lower().startswith('readme.'), d.get('name')
+assert d.get('encoding') == 'base64' and d.get('content'), 'missing base64 content'
+assert all(k in d for k in ('sha', 'size', 'html_url', 'download_url')), 'missing github-shaped fields'
+" 2>/dev/null; then
+  echo "PASS  GET /repos/{owner}/{repo}/readme (routed via contents/README.md)"
+  PASS=$((PASS+1))
+else
+  echo "FAIL  GET /repos/{owner}/{repo}/readme -- expected 200 with base64 content and github-shaped fields, got HTTP $readme_code"
+  FAIL=$((FAIL+1))
+fi
+
 echo "== Explicitly-unsupported endpoints 501 cleanly =="
-check "GET /repos/{owner}/{repo}/readme (no Forgejo equivalent)" GET "/repos/$TEST_OWNER/$TEST_REPO/readme" 501
 check "GET .../dependabot/secrets (no Forgejo equivalent)" GET "/repos/$TEST_OWNER/$TEST_REPO/dependabot/secrets" 501
 
 echo
