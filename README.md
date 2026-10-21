@@ -19,13 +19,26 @@ Under the hood it's [Shotgun](https://github.com/ThatXliner/shotgun) — an Open
 
 ```sh
 git clone https://github.com/ThatXliner/shotgun shotgun
+git -C shotgun checkout 050d12f03e5b67eda30f2bde4db8fea94661f190
 git clone https://github.com/ThatXliner/anvil anvil && cd anvil
 ./anvil.sh --forgejo-url https://your-forgejo.example.com
 ```
 
-First run builds Shotgun from `../shotgun` (needs a [Rust toolchain](https://rustup.rs)). After that it starts instantly.
+The launcher builds Shotgun from `../shotgun` with its committed lockfile (needs a [Rust toolchain](https://rustup.rs)). Cargo reuses unchanged build outputs and rebuilds after source or dependency updates.
 
 If you have `shotgun` on `PATH` or elsewhere, set `$SHOTGUN_DIR` — see `anvil.sh --help`.
+
+### TLS security updates
+
+Anvil's outbound HTTPS uses Shotgun's reqwest/rustls client and bundled roots.
+The revision above includes the [eMudhra certificate compromise](https://emudhra.we-have-a-problem.com/)
+fixes: rustls-webpki 0.103.16 and webpki-roots 1.0.10. The Docker build fetches
+that revision and builds with its lockfile. Updating the container's OS roots
+alone does not update Shotgun's bundled roots.
+
+For an existing checkout, fetch and check out that revision or a newer fixed
+revision before restarting Anvil. If you supply a `shotgun` executable on `PATH`,
+rebuild or replace it too. The launcher uses that executable as supplied.
 
 ```sh
 # Test it
@@ -63,7 +76,7 @@ anvil.sh                 — entrypoint script
 specs/                   — trimmed and full OpenAPI specs, plus trim/edit scripts
 scripts/test-p1.sh       — live endpoint tests
 scripts/dev-tls-proxy.py — local HTTPS proxy for gh testing
-Dockerfile               — containerized alternative (build from parent dir containing both anvil/ and shotgun/)
+Dockerfile               — containerized alternative (build from parent dir containing anvil/)
 ```
 
 ---
