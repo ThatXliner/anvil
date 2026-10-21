@@ -4,7 +4,7 @@
 #   ./anvil.sh --forgejo-url https://git.example.com
 #   FORGEJO_URL=https://git.example.com ./anvil.sh
 #
-# Builds (once) and runs Shotgun -- the generic OpenAPI-to-OpenAPI proxy
+# Builds and runs Shotgun -- the generic OpenAPI-to-OpenAPI proxy
 # this project is "just" a curated configuration of -- against the
 # mappings.toml and specs/ shipped in this repo.
 set -euo pipefail
@@ -74,15 +74,14 @@ else
     exit 1
   fi
   SHOTGUN_BIN="$SHOTGUN_DIR/target/release/shotgun"
-  if [ ! -x "$SHOTGUN_BIN" ]; then
-    if ! command -v cargo >/dev/null 2>&1; then
-      echo "anvil: shotgun isn't built yet at $SHOTGUN_DIR and 'cargo' isn't on PATH." >&2
-      echo "        install Rust (https://rustup.rs) to build it." >&2
-      exit 1
-    fi
-    echo "anvil: building shotgun from $SHOTGUN_DIR (first run only)..." >&2
-    (cd "$SHOTGUN_DIR" && cargo build --release --quiet)
+  if ! command -v cargo >/dev/null 2>&1; then
+    echo "anvil: 'cargo' is required to build the Shotgun checkout at $SHOTGUN_DIR." >&2
+    echo "        install Rust (https://rustup.rs), or put an updated 'shotgun' binary on PATH." >&2
+    exit 1
   fi
+  # Rebuild after checkout/lockfile updates instead of reusing a stale executable.
+  echo "anvil: building shotgun from $SHOTGUN_DIR..." >&2
+  (cd "$SHOTGUN_DIR" && cargo build --release --locked --quiet)
 fi
 
 ARGS=(serve --mappings "$MAPPINGS" --target-url "$FORGEJO_URL" --listen "$LISTEN" --log-level "$LOG_LEVEL")

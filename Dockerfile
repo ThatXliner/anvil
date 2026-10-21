@@ -1,10 +1,15 @@
-# Build context must be the parent directory containing both this repo and
-# a Shotgun checkout as siblings, e.g. from that parent:
+# Build context is the parent directory containing this repo:
 #   docker build -f anvil/Dockerfile -t anvil .
 FROM rust:1-slim AS build
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
-COPY shotgun/ ./
-RUN cargo build --release
+# This revision includes the eMudhra rustls-webpki and CA-root fixes.
+RUN git init . \
+    && git remote add origin https://github.com/ThatXliner/shotgun.git \
+    && git fetch --depth 1 origin 050d12f03e5b67eda30f2bde4db8fea94661f190 \
+    && git checkout --detach FETCH_HEAD \
+    && cargo build --release --locked
 
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
