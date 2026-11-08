@@ -4,7 +4,7 @@ FROM rust:1-slim AS build
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
-# This revision includes the eMudhra rustls-webpki and CA-root fixes.
+# Pinned Shotgun revision: rustls-webpki 0.103.16+, webpki-roots 1.0.10+.
 RUN git init . \
     && git remote add origin https://github.com/ThatXliner/shotgun.git \
     && git fetch --depth 1 origin 050d12f03e5b67eda30f2bde4db8fea94661f190 \

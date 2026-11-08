@@ -28,17 +28,13 @@ The launcher builds Shotgun from `../shotgun` with its committed lockfile (needs
 
 If you have `shotgun` on `PATH` or elsewhere, set `$SHOTGUN_DIR` — see `anvil.sh --help`.
 
-### TLS security updates
+### TLS roots
 
-Anvil's outbound HTTPS uses Shotgun's reqwest/rustls client and bundled roots.
-The revision above includes the [eMudhra certificate compromise](https://emudhra.we-have-a-problem.com/)
-fixes: rustls-webpki 0.103.16 and webpki-roots 1.0.10. The Docker build fetches
-that revision and builds with its lockfile. Updating the container's OS roots
-alone does not update Shotgun's bundled roots.
-
-For an existing checkout, fetch and check out that revision or a newer fixed
-revision before restarting Anvil. If you supply a `shotgun` executable on `PATH`,
-rebuild or replace it too. The launcher uses that executable as supplied.
+Anvil's outbound HTTPS uses Shotgun's reqwest/rustls client and its bundled
+roots, so updating the container's OS roots does not change them. Use the
+Shotgun revision above or newer (rustls-webpki 0.103.16+, webpki-roots 1.0.10+).
+The Docker build fetches that revision and builds with its lockfile. If you
+supply a `shotgun` executable on `PATH`, the launcher uses it as supplied.
 
 ```sh
 # Test it
